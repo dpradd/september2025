@@ -2,7 +2,10 @@ name: GitHubFundament
 
 # Controls when the workflow will run
 on:
-  workflow_dispatch
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   
