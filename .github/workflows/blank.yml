@@ -1,0 +1,34 @@
+name: GitHubFundament
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch
+
+jobs:
+  runs-on: ubuntu-latest
+runsbashscript:
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run a one-line script
+        if: runner.os == 'Linux'
+        run: echo Hello, world!
+
+      - name: Run a multi-line script
+        if: {{runs-on.ubuntu-latest}}
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+ 
+ runsPSscript:
+
+    if: {{runs-on.windows-latest}}
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run PS if Windows Runner
+        if: runner.os == 'Windows'
+        run: |
+          write-host "I am powershell"
+          
