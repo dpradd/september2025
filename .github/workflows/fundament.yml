@@ -5,8 +5,10 @@ on:
   workflow_dispatch
 
 jobs:
-  runs-on: ubuntu-latest
-runsbashscript:
+  
+  
+  runsbashscript:
+    runs-on: ubuntu-latest
     
     steps:
       - uses: actions/checkout@v4
@@ -16,19 +18,19 @@ runsbashscript:
         run: echo Hello, world!
 
       - name: Run a multi-line script
-        if: {{runs-on.ubuntu-latest}}
+        if: runner.os == 'Linux'
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
  
- runsPSscript:
+  runsPSscript:
+    runs-on: windows-latest
 
-    if: {{runs-on.windows-latest}}
     steps:
     - uses: actions/checkout@v4
     
     - name: Run PS if Windows Runner
-        if: runner.os == 'Windows'
-        run: |
+      if: runner.os == 'Windows'
+      run: |
           write-host "I am powershell"
           
