@@ -10,8 +10,12 @@ on:
     branches:
       - main
 
+env:
+  ARTIFACT_PATH: ./myartifact
+  BASH_MESSAGE: "I am bash from env var"
+  PS_MESSAGE: "I am powershell from env var"
+  
 jobs:
-
  
   runsbashscript:
     runs-on: ${{ matrix.os }}
@@ -29,31 +33,29 @@ jobs:
       - name: Run a multi-line script
         if: runner.os == 'Linux'
         run: |
-          mkdir -p ./myartifact/BASH
-          echo "I am bash" >> ./myartifact/BASH/bash_output.txt
+          mkdir -p ${{ env.ARTIFACT_PATH }}/BASH
+          echo "${{ env.BASH_MESSAGE }}" >> ${{ env.ARTIFACT_PATH }}/BASH/bash_output.txt
+          echo "Repository: ${{ github.repository }}" >> ${{ env.ARTIFACT_PATH }}/BASH/bash_output.txt
+          echo "OS: ${{ matrix.os }}" >> ${{ env.ARTIFACT_PATH }}/BASH/bash_output.txt
           
-      # - name: Upload a Build Artifact
-      #   uses: actions/upload-artifact@v4.6.2
-      #   with:
-      #     name: bash-artifact
-      #     path: ./myartifact
-
       - name: Run PS if Windows Runner
         if: runner.os == 'Windows'
         run: |
-          New-Item -ItemType Directory -Path ./myartifact/PS -Force
-          write-host "I am powershell" >> ./myartifact/PS/powershell_output.txt
+          New-Item -ItemType Directory -Path ${{ env.ARTIFACT_PATH }}/PS -Force
+          write-host "${{ env.PS_MESSAGE }}" >> ${{ env.ARTIFACT_PATH }}/PS/powershell_output.txt
+          write-host "Repository: ${{ github.repository }}" >> ${{ env.ARTIFACT_PATH }}/PS/powershell_output.txt
+          write-host "OS: ${{ matrix.os }}" >> ${{ env.ARTIFACT_PATH }}/PS/powershell_output.txt
 
       - name: Upload a Build Artifact
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: bash-artifacts
-          path: ./myartifact
+          name: bash-artifacts-${{ matrix.os }}
+          path: ${{ env.ARTIFACT_PATH }}
 
       - name: Upload a Build Artifact
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ps-artifacts
-          path: ./myartifact
+          name: ps-artifacts-${{ matrix.os }}
+          path: ${{ env.ARTIFACT_PATH }}
