@@ -20,9 +20,9 @@ jobs:
       - name: Run a multi-line script
         if: runner.os == 'Linux'
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
- 
+          mkdir -p ./myartifact/BASH
+          echo "I am bash" >> ./myartifact/BASH/bash_output.txt
+          
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
@@ -38,7 +38,7 @@ jobs:
     - name: Run PS if Windows Runner
       if: runner.os == 'Windows'
       run: |
-          write-host "I am powershell"
+          write-host "I am powershell" >> ./myartifact/PS/powershell_output.txt
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.6.2
