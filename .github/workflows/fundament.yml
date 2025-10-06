@@ -45,7 +45,15 @@ jobs:
           write-host "I am powershell" >> ./myartifact/PS/powershell_output.txt
 
       - name: Upload a Build Artifact
+        if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: all-artifacts
+          name: bash-artifacts
+          path: ./myartifact
+
+      - name: Upload a Build Artifact
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: ps-artifacts
           path: ./myartifact
