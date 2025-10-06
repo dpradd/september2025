@@ -38,6 +38,7 @@ jobs:
     - name: Run PS if Windows Runner
       if: runner.os == 'Windows'
       run: |
+          New-Item -ItemType Directory -Path ./myartifact/PS -Force
           write-host "I am powershell" >> ./myartifact/PS/powershell_output.txt
 
     - name: Upload a Build Artifact
