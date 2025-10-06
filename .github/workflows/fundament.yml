@@ -32,11 +32,11 @@ jobs:
           mkdir -p ./myartifact/BASH
           echo "I am bash" >> ./myartifact/BASH/bash_output.txt
           
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: bash-artifact
-          path: ./myartifact/BASH
+      # - name: Upload a Build Artifact
+      #   uses: actions/upload-artifact@v4.6.2
+      #   with:
+      #     name: bash-artifact
+      #     path: ./myartifact
 
       - name: Run PS if Windows Runner
         if: runner.os == 'Windows'
@@ -47,5 +47,5 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ps-artifact
-          path: ./myartifact/PS
+          name: all-artifacts
+          path: ./myartifact
