@@ -28,6 +28,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Terraform Init
+        working-directory: .github/terraform
         run: |
           terraform init \
           -backend-config="resource_group_name=${{ vars.TF_RESOURCE_GROUP_NAME }}" \
@@ -36,9 +37,11 @@ jobs:
           -backend-config="key=${{ vars.TF_STATE_KEY }}"
 
       - name: Terraform Plan
+        working-directory: .github/terraform
         env:
             TF_VAR_location: "westeurope"
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
+        working-directory: .github/terraform
         run: terraform apply -auto-approve tfplan
