@@ -10,7 +10,7 @@ permissions:
 env:
   LOCATION: westeurope
   RESOURCE_GROUP: tfstate-rg
-  STORAGE_ACCOUNT: dprtfstate${{ github.run_number }}
+  STORAGE_ACCOUNT: dprtfstate3 # {{ github.run_number }}
   CONTAINER_NAME: dprtfstate
   STATE_KEY: terraform.tfstate
 
