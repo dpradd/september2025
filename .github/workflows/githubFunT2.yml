@@ -37,12 +37,15 @@ jobs:
           path: ${{ env.ARTIFACT_PATH }}
 
   summary:
+    if: github.ref_name == 'main'
     runs-on: windows-latest
     needs: build-info
+    env: 
+      build_tag: ${{ needs.build-info.outputs.build_tag }}
     steps:
       - name: Display Build Tag
         run: |
-          echo "Build Tag from previous job: ${{ needs.build-info.outputs.build_tag }}"
+          echo "Build Tag from previous job: ${{ env.build_tag }}"
 
       - name: Download Artifact from previous job
         uses: actions/download-artifact@v4
