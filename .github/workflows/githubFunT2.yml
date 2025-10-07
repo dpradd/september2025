@@ -26,7 +26,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           mkdir -p ${{ env.ARTIFACT_PATH }}/BASH
-          echo "Branch Name: ${{ github.ref_name }} >> ${{ env.ARTIFACT_PATH }}/BASH/build_info.txt
+          echo "Branch Name: ${{ github.ref_name }}" >> ${{ env.ARTIFACT_PATH }}/BASH/build_info.txt
           echo "Repository: ${{ github.repository }}" >> ${{ env.ARTIFACT_PATH }}/BASH/build_info.txt
           echo "Commit SHA: ${{ github.sha }}" >> ${{ env.ARTIFACT_PATH }}/BASH/build_info.txt
           

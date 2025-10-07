@@ -2,13 +2,13 @@ name: GitHubFundament
 
 # Controls when the workflow will run
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
-  pull_request:
-    branches:
-      - main
+  # pull_request:
+  #   branches:
+  #     - main
 
 env:
   ARTIFACT_PATH: ./myartifact
