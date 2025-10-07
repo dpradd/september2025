@@ -1,0 +1,56 @@
+name: GitHubFundamentT2
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  # pull_request:
+  #   branches:
+  #     - main
+
+env:
+  ARTIFACT_PATH: ./myartifact
+  BASH_MESSAGE: "I am bash from env var"
+  PS_MESSAGE: "I am powershell from env var"
+  
+jobs:
+ 
+  build-info:
+    runs-on: ubuntu-latest
+    outputs:
+      build_tag: build-${{ github.run_number }}-${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run a multi-line script
+        run: |
+          mkdir -p ${{ env.ARTIFACT_PATH }}/BASH
+          echo "Branch Name: ${{ github.ref_name }} >> ${{ env.ARTIFACT_PATH }}/BASH/build_info.txt
+          echo "Repository: ${{ github.repository }}" >> ${{ env.ARTIFACT_PATH }}/BASH/build_info.txt
+          echo "Commit SHA: ${{ github.sha }}" >> ${{ env.ARTIFACT_PATH }}/BASH/build_info.txt
+          
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: ${{ vars.ARTIFACT_NAME }}-${{ github.ref_name }}
+          path: ${{ env.ARTIFACT_PATH }}
+
+  summary:
+    runs-on: windows-latest
+    needs: build-info
+    steps:
+      - name: Display Build Tag
+        run: |
+          echo "Build Tag from previous job: ${{ needs.build-info.outputs.build_tag }}"
+
+      - name: Download Artifact from previous job
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ vars.ARTIFACT_NAME }}-${{ github.ref_name }}
+          path: ${{ env.ARTIFACT_PATH }}
+      
+      - name: echo build_info.txt
+        run: |
+          $content = Get-Content ${{ env.ARTIFACT_PATH }}/BASH/build_info.txt
+          Write-Output $content
