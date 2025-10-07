@@ -2,9 +2,9 @@ name: GitHubFundamentAzureTask
 
 # Controls when the workflow will run
 on:
-  push:
-    branches:
-      - main
+#   push:
+#     branches:
+#       - main
   workflow_dispatch:
   # pull_request:
   #   branches:
