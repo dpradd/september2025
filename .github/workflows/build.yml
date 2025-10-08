@@ -1,8 +1,8 @@
 name: Build Web Site
 
 on:
-  push:
-    branches: [ main ]
+#   push:
+#     branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: app
+        working-directory: ./github/app
 
     steps:
       - name: Checkout
