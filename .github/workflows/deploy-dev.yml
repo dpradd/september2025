@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy-dev:
-    uses: ./.github/workflows/terraform-deploy.yml
+    uses: ./.github/workflows/template/terraform-deploy.yml
     with:
       environment: dev
     secrets: inherit
