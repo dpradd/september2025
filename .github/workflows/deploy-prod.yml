@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy-prod:
-    uses: ./.github/workflows/taskEnvironment/terraform-deploy.yml
+    uses: ./.github/workflows/terraform-deploy.yml
     with:
       environment: prod
     secrets: inherit
