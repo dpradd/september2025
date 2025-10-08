@@ -29,8 +29,7 @@ jobs:
         run: npm run build
 
       - name: Zip build artifact
-        run: zip -r ../app.zip .
-
+        run: zip -r app.zip .
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
