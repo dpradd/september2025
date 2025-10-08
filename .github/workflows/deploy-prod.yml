@@ -8,4 +8,5 @@ jobs:
     uses: ./.github/workflows/terraform-deploy.yml
     with:
       environment: prod
+      sku_name: "P1v2"
     secrets: inherit
