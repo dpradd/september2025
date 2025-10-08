@@ -35,7 +35,7 @@ jobs:
           terraform_version: 1.7.5
 
       - name: Terraform Init
-        working-directory: ./terraform/${{ inputs.environment }}/
+        working-directory: .github/terraform/${{ inputs.environment }}
         run: |
           terraform init \
           -backend-config="resource_group_name=${{ vars.TF_RESOURCE_GROUP_NAME }}" \
@@ -44,9 +44,9 @@ jobs:
           -backend-config="key=${{ inputs.environment }}.tfstate"
 
       - name: Terraform Plan
-        working-directory: ./terraform/${{ inputs.environment }}/
+        working-directory: .github/terraform/${{ inputs.environment }}
         run: terraform plan -var="env=${{ inputs.environment }}"
 
       - name: Terraform Apply
-        working-directory: ./terraform/${{ inputs.environment }}/
+        working-directory: .github/terraform/${{ inputs.environment }}
         run: terraform apply -auto-approve -var="env=${{ inputs.environment }}"
