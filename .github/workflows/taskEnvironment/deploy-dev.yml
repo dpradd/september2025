@@ -1,0 +1,13 @@
+name: Deploy Dev
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-dev:
+    uses: ./.github/workflows/taskEnvironment/terraform-deploy.yml
+    with:
+      environment: dev
+    secrets: inherit
