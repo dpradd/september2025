@@ -11,7 +11,7 @@ on:
       environment:
         required: true
         type: string
-        default: "prod"
+        default: prod
     secrets:
       ARM_CLIENT_ID:
         required: true
