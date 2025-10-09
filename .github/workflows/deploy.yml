@@ -9,7 +9,7 @@ on:
         default: prod
         type: string
   workflow_run:
-    workflows: ["Build App"]
+    workflows: ["Build Web Site"]
     types:
       - completed
 
