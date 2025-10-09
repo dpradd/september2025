@@ -72,12 +72,12 @@ jobs:
         run: terraform apply -auto-approve -var="env=${{ inputs.environment || 'prod' }}"
 
       - name: Get App Name
-        id: output
+        id: output_app
         working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
         run: echo "app_name=$(terraform output -raw webapp_name)" >> $GITHUB_ENV
 
       - name: Get Resource Group Name
-        id: outputRG
+        id: output_rg
         working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
         run: echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_ENV
 
