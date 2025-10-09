@@ -74,12 +74,12 @@ jobs:
       - name: Get App Name
         id: output_app
         working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
-        run: echo "app_name=$(terraform output -raw webapp_name)" >> $GITHUB_ENV
+        run: echo "app_name=$(terraform output -raw webapp_name)" >> $GITHUB_OUTPUT
 
       - name: Get Resource Group Name
         id: output_rg
         working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
-        run: echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_ENV
+        run: echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
 
   deploy-app:
     needs: terraform
