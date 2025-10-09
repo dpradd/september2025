@@ -35,3 +35,10 @@ jobs:
         with:
           name: webapp
           path: .github/app/app.zip
+
+  deploy:
+    needs: build
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: prod
+    secrets: inherit

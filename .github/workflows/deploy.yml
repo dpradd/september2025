@@ -8,10 +8,10 @@ on:
         required: true
         default: prod
         type: string
-  workflow_run:
-    workflows: ["Build Web Site"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["Build Web Site"]
+  #   types:
+  #     - completed
 
   workflow_call:
     inputs:
