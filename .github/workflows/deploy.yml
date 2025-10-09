@@ -31,11 +31,11 @@ on:
 
 jobs:
   terraform:
-    name: Deploy to ${{ inputs.environment }}
+    name: Deploy to ${{ inputs.environment || 'prod' }}
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    environment: ${{ inputs.environment || 'prod' }}
     env:
-       TF_VAR_env: ${{ inputs.environment }}
+       TF_VAR_env: ${{ inputs.environment || 'prod' }}
        TF_VAR_location: "westeurope"
        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -52,30 +52,30 @@ jobs:
           terraform_version: 1.7.5
 
       - name: Terraform Init
-        working-directory: .github/terraform/${{ inputs.environment }}
+        working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
         run: |
           terraform init \
           -backend-config="resource_group_name=${{ vars.TF_RESOURCE_GROUP_NAME }}" \
           -backend-config="storage_account_name=${{ vars.TF_STORAGE_ACCOUNT_NAME }}" \
           -backend-config="container_name=${{ vars.TF_CONTAINER_NAME }}" \
-          -backend-config="key=${{ inputs.environment }}.tfstate"
+          -backend-config="key=${{ inputs.environment || 'prod' }}.tfstate"
 
       - name: Terraform Plan
-        working-directory: .github/terraform/${{ inputs.environment }}
-        run: terraform plan -var="env=${{ inputs.environment }}"
+        working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
+        run: terraform plan -var="env=${{ inputs.environment || 'prod' }}"
 
       - name: Terraform Apply
-        working-directory: .github/terraform/${{ inputs.environment }}
-        run: terraform apply -auto-approve -var="env=${{ inputs.environment }}"
+        working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
+        run: terraform apply -auto-approve -var="env=${{ inputs.environment || 'prod' }}"
 
       - name: Get App Name
         id: output
-        working-directory: .github/terraform/${{ inputs.environment }}
+        working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
         run: echo "app_name=$(terraform output -raw webapp_name)" >> $GITHUB_ENV
 
       - name: Get Resource Group Name
         id: outputRG
-        working-directory: .github/terraform/${{ inputs.environment }}
+        working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
         run: echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_ENV
 
   deploy-app:
