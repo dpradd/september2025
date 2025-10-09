@@ -33,6 +33,9 @@ jobs:
   terraform:
     name: Deploy to ${{ inputs.environment || 'prod' }}
     runs-on: ubuntu-latest
+    outputs:
+      app_name: ${{ steps.output_app.outputs.app_name }}
+      resource_group_name: ${{ steps.output_rg.outputs.resource_group_name }}
     environment: ${{ inputs.environment || 'prod' }}
     env:
        TF_VAR_env: ${{ inputs.environment || 'prod' }}
@@ -111,5 +114,5 @@ jobs:
 
       - uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ env.app_name }}
+          app-name: ${{ needs.terraform.outputs.app_name }}
           package: app.zip
