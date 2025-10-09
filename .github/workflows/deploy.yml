@@ -36,6 +36,7 @@ jobs:
     outputs:
       app_name: ${{ steps.output_app.outputs.app_name }}
       resource_group_name: ${{ steps.output_rg.outputs.resource_group_name }}
+      web_app_url: ${{ steps.output_url.outputs.web_app_url }}
     environment: ${{ inputs.environment || 'prod' }}
     env:
        TF_VAR_env: ${{ inputs.environment || 'prod' }}
@@ -81,6 +82,11 @@ jobs:
         working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
         run: echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
 
+      - name: Get Resource Group Name
+        id: output_url
+        working-directory: .github/terraform/${{ inputs.environment || 'prod' }}
+        run: echo "web_app_url=$(terraform output -raw web_app_url)" >> $GITHUB_OUTPUT
+
   deploy-app:
     needs: terraform
     runs-on: ubuntu-latest
@@ -116,3 +122,16 @@ jobs:
         with:
           app-name: ${{ needs.terraform.outputs.app_name }}
           package: app.zip
+
+      - name: Output Web App URL
+        run: echo ${{ needs.terraform.outputs.web_app_url }}
+
+      - name: Add Web App URL to summary
+        run: echo "### 🌐 Web App deployed successfully!" >> $GITHUB_STEP_SUMMARY
+        shell: bash
+      
+      - name: Add URL to summary
+        run: |
+          echo "Web App deployed successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "- URL: [${{ needs.terraform.outputs.web_app_url }}](${{ needs.terraform.outputs.web_app_url }})" >> $GITHUB_STEP_SUMMARY
+        shell: bash
