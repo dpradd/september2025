@@ -85,9 +85,13 @@ jobs:
           -backend-config="container_name=${{ env.CONTAINER_NAME }}" \
           -backend-config="key=${{ env.STATE_KEY }}"
 
-      - name: Terraform Plan
+      - name: Terraform Plan (for infra only)
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform plan -out=tfplan
+        run: |
+         terraform plan \
+           -target=azurerm_container_registry.acr \
+           -target=azurerm_container_app_environment.env \
+           -out=tfplan
 
       - name: Terraform apply (create ACR + Container Apps env only)
         working-directory: ${{ env.TF_WORKING_DIR }}
@@ -110,13 +114,6 @@ jobs:
       - name: Login to ACR with az CLI
         run: |
           az acr login --name ${{ steps.tfoutputs.outputs.acr_name }}
-
-    #   - name: Set Terraform Azure credentials
-    #     run: |
-    #         echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
-    #         echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
-    #         echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-    #         echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
 
       - name: Build and push Docker image to ACR
         env:
