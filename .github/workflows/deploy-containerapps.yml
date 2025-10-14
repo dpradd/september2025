@@ -85,11 +85,17 @@ jobs:
           -backend-config="container_name=${{ env.CONTAINER_NAME }}" \
           -backend-config="key=${{ env.STATE_KEY }}"
 
+      - name: Terraform Plan
+        working-directory: .github/terraform
+        env:
+            TF_VAR_location: "westeurope"
+        run: terraform plan -out=tfplan
+
       - name: Terraform apply (create ACR + Container Apps env only)
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
           # target the registry and the environment so we can push image afterwards
-          terraform apply -target=azurerm_container_registry.acr -target=azurerm_container_app_environment.env -auto-approve
+          terraform apply -target=azurerm_container_registry.acr -target=azurerm_container_app_environment.env -auto-approve tfplan
 
       - name: Get ACR login server from terraform outputs
         id: tfoutputs
