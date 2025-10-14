@@ -86,9 +86,7 @@ jobs:
           -backend-config="key=${{ env.STATE_KEY }}"
 
       - name: Terraform Plan
-        working-directory: .github/terraform
-        env:
-            TF_VAR_location: "westeurope"
+        working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform plan -out=tfplan
 
       - name: Terraform apply (create ACR + Container Apps env only)
