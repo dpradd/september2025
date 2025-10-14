@@ -13,6 +13,11 @@ env:
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  LOCATION: westeurope
+  RESOURCE_GROUP: tfstate-rg
+  STORAGE_ACCOUNT: dprtfstate3 # {{ github.run_number }}
+  CONTAINER_NAME: dprtfstate
+  STATE_KEY: terraform.tfstate
 
 jobs:
   deploy:
@@ -38,10 +43,47 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
           enable-AzPSSession: false
+    
+      - name: Create Resource Group
+        run: |
+          az group create \
+            --name $RESOURCE_GROUP \
+            --location $LOCATION
+
+      - name: Create Storage Account
+        run: |
+          az storage account create \
+            --name $STORAGE_ACCOUNT \
+            --resource-group $RESOURCE_GROUP \
+            --location $LOCATION \
+            --sku Standard_LRS
+
+      - name: Create Blob Container
+        run: |
+          CONNECTION_STRING=$(az storage account show-connection-string \
+            --name $STORAGE_ACCOUNT \
+            --resource-group $RESOURCE_GROUP \
+            -o tsv)
+          az storage container create \
+            --name $CONTAINER_NAME \
+            --connection-string "$CONNECTION_STRING"
+
+      - name: Output Terraform Backend Info
+        run: |
+          echo "Resource Group: $RESOURCE_GROUP"
+          echo "Storage Account: $STORAGE_ACCOUNT"
+          echo "Container Name: $CONTAINER_NAME"
+          echo "State Key: $STATE_KEY"
+
 
       - name: Terraform init
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform init -input=false
+        run: |
+          terraform init \
+          -backend-config="resource_group_name=${{ env.RESOURCE_GROUP }}" \
+          -backend-config="storage_account_name=${{ env.STORAGE_ACCOUNT }}" \
+          -backend-config="container_name=${{ env.CONTAINER_NAME }}" \
+          -backend-config="key=${{ env.STATE_KEY }}"
 
       - name: Terraform apply (create ACR + Container Apps env only)
         working-directory: ${{ env.TF_WORKING_DIR }}
