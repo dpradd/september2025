@@ -61,6 +61,13 @@ jobs:
         run: |
           az acr login --name ${{ steps.tfoutputs.outputs.acr_name }}
 
+      - name: Set Terraform Azure credentials
+        run: |
+            echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+            echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+            echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
+
       - name: Build and push Docker image to ACR
         env:
           ACR_LOGIN_SERVER: ${{ steps.tfoutputs.outputs.acr_login_server }}
