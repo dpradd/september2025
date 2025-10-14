@@ -38,7 +38,6 @@ resource "azurerm_container_app_environment" "env" {
 # The container app will be created in the second apply (targeted or normal)
 resource "azurerm_container_app" "app" {
   name                        = var.container_app_name
-  location                    = azurerm_resource_group.rg.location
   resource_group_name          = azurerm_resource_group.rg.name
   container_app_environment_id = azurerm_container_app_environment.env.id
   revision_mode                = "Single"
