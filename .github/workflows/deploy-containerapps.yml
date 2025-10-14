@@ -113,31 +113,23 @@ jobs:
           echo "ACR Login Server: $ACR_LOGIN_SERVER"
           echo "ACR Name: $ACR_NAME"
 
-          #  Use unique delimiter to avoid "::" parsing issues
-          delimiter="EOF_$(date +%s)"
-          {
-            echo "acr_login_server<<$delimiter"
-            echo "$ACR_LOGIN_SERVER"
-            echo "$delimiter"
-            echo "acr_name<<$delimiter"
-            echo "$ACR_NAME"
-            echo "$delimiter"
-          } >> "$GITHUB_OUTPUT"
+          # Write to GitHub outputs
+          echo "acr_login_server=$ACR_LOGIN_SERVER" >> $GITHUB_OUTPUT
+          echo "acr_name=$ACR_NAME" >> $GITHUB_OUTPUT
 
       - name: Login to ACR with az CLI
-        run: |
-          az acr login --name ${{ steps.tfoutputs.outputs.acr_name }}
+        run: az acr login --name ${{ steps.tfoutputs.outputs.acr_name }}
 
       - name: Build and push Docker image to ACR
         env:
-          ACR_LOGIN_SERVER: ${{ steps.tfoutputs.outputs.acr_login_server }}
-          IMAGE_TAG: ${{ github.sha }}
+            ACR_LOGIN_SERVER: ${{ steps.tfoutputs.outputs.acr_login_server }}
+            IMAGE_TAG: ${{ github.sha }}
         run: |
-          IMAGE=${ACR_LOGIN_SERVER}/${{ env.IMAGE_NAME }}:${IMAGE_TAG}
-          echo "Building image $IMAGE"
-          docker build -t $IMAGE .
-          docker push $IMAGE
-          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+              IMAGE=${ACR_LOGIN_SERVER}/${{ env.IMAGE_NAME }}:${IMAGE_TAG}
+              echo "Building image $IMAGE"
+              docker build -t $IMAGE .
+              docker push $IMAGE
+              echo "image=$IMAGE" >> $GITHUB_OUTPUT
 
       - name: Terraform apply (create/update Container App using pushed image)
         working-directory: ${{ env.TF_WORKING_DIR }}
