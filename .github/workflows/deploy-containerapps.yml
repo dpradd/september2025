@@ -106,11 +106,22 @@ jobs:
           echo "##[group]Terraform outputs"
           terraform output -json
           echo "##[endgroup]"
-          ACR_LOGIN_SERVER=$(terraform output -raw acr_login_server)
-          ACR_NAME=$(terraform output -raw acr_name)
+
+          ACR_LOGIN_SERVER=$(terraform output -raw acr_login_server | tr -d '\r')
+          ACR_NAME=$(terraform output -raw acr_name | tr -d '\r')
+
+          echo "ACR Login Server: $ACR_LOGIN_SERVER"
+          echo "ACR Name: $ACR_NAME"
+
+          #  Use unique delimiter to avoid "::" parsing issues
+          delimiter="EOF_$(date +%s)"
           {
-          echo "acr_login_server=${ACR_LOGIN_SERVER}"
-          echo "acr_name=${ACR_NAME}"
+            echo "acr_login_server<<$delimiter"
+            echo "$ACR_LOGIN_SERVER"
+            echo "$delimiter"
+            echo "acr_name<<$delimiter"
+            echo "$ACR_NAME"
+            echo "$delimiter"
           } >> "$GITHUB_OUTPUT"
 
       - name: Login to ACR with az CLI
