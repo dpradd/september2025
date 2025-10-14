@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  TF_WORKING_DIR: ./infra
+  TF_WORKING_DIR: .github/infra
   IMAGE_NAME: demoapp
 
 jobs:
